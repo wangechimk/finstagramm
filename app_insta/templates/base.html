@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %}{% load bootstrap5 %} 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,23 +7,19 @@
     <meta name="viewport" content="width=device-width">
     <title>Instaclone</title>
 
-    {% block styles %}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    {% block styles %}{% bootstrap_css %} 
     <link rel="stylesheet" href="{% static 'css/style.css' %}"> {% endblock %}
 </head>
 
 <body>
-    {% include 'navbar.html' %}
 
     <!--  -->
-    {% block content %} {% endblock %}
+    {% block content %} {{block.super}} {% endblock %}
 
 
     <!--  -->
     {% block scripts %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://kit.fontawesome.com/88ca11e94c.js" crossorigin="anonymous"></script>
     {% endblock %}
 </body>
 
