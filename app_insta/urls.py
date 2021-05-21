@@ -7,6 +7,7 @@ app_name='app_insta'
 
 urlpatterns=[
     path('', views.feed, name='feed'),
+    path('profile/', views.profile, name='profile'),
 ] 
 if settings.DEBUG:
     urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_URL) 
