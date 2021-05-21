@@ -1,0 +1,83 @@
+.post-overlay{
+    position: absolute;
+    top: 4%;
+    bottom: 4%;
+    left: 4%;
+    right: 4%;
+    opacity: 0;
+    transition: .1s ease;
+    padding: 1rem !important;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.post-overlay-container{
+    margin-bottom: 1.5rem;
+}
+
+.post-overlay-container:hover .post-overlay{
+    opacity: 1;
+}
+.overlay-text {
+    color: white !important;
+    font-size: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+@media (max-width: 768px) { 
+    .nav>ul{
+        margin-top:2%;
+        padding-bottom: 2%;
+    }
+    .card,.card-header,.card-body,.card-footer{
+        background-color: #fafafa !important;
+        border:0 !important; 
+    }
+    .save_btn{
+        margin-left:67% !important;
+    }
+    .commentForm>#id_text{
+        background-color: #fafafa;
+    }
+
+    #inbox-detail{
+        height: 85vh !important;
+    }
+    
+    .post-overlay-container{
+        margin-bottom: 0 !important;
+    }
+    .messageFormContainer{
+        height: 7.5vh !important;   
+    }
+    .messageForm>#id_text{
+        background-color: #fafafa;
+    }
+    .comment-submit{
+        margin-left:0% !important;
+    }
+    .commentForm svg, .replyForm svg{
+        display: none !important;
+    }
+    .commentForm img, .replyForm img{
+        display: inline !important;
+    }
+    .comment-submit{
+        background-color: #fafafa;
+    }
+    
+    
+    #notification-display{
+        width: 110% !important;
+        height:1100% !important;
+    }
+    
+    .share-modal>.modal-dialog,.new-inbox-modal>.modal-dialog{
+        max-width: 100% !important;
+    }
+}
