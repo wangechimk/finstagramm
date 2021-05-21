@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container justify-content-center">
             <div class="d-flex flex-row justify-content-between align-items-center col-9">
-                <a class="navbar-brand" href="{% url 'profile' %}">
+                <a class="navbar-brand" href="">
                     <img src="{% static 'img/ig-logo.png'%}"loading="lazy">
                 </a>
                 <div>
@@ -59,7 +59,7 @@
                             <a href="#" class="link-menu">
                                 <div
                                     class="rounded-circle overflow-hidden d-flex justify-content-center align-items-center border topbar-profile-photo">
-                                    <img src="{% static 'img/profile1.jpg'%}" alt="..."
+                                    <img src="{{item.profile.photo.url}}" alt="..."
                                         style="transform: scale(1.5); width: 100%; position: absolute; left: 0;">
                                 </div>
                             </a>
