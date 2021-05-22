@@ -28,7 +28,7 @@
         <div class='signup-content text-center col-xs-12 col-lg-5 m-md-0 ml-sm-5 m-xs-0'>
             <div class='card p-4 pt-4'>
                 <p><img src="{% static 'img/ig-logo.png' %}" alt="logo" style="width:170px"></p>  
-                <form method="post" action="{% url 'login' %}">
+                <form method="post" action="{% url 'app_insta:login' %}">
                     {% csrf_token %}
                     {{ form }}
                     <input type="submit" class="btn btn-primary col-11 mt-2 p-1" value="Log In" style="font-size: 0.9rem; font-weight: 600; background-color:#0095f6; " />
@@ -36,14 +36,14 @@
                 </form>
 
                 <p><img class='mb-2 mt-3'src="{% static 'img/or.png' %}" style="width: 80%;"></p>
-                <a href="{% url 'social:begin' 'facebook' %}" class='btn p-0 text-light mb-3' style="background-color: #fff;"><i class="fa fa-facebook" aria-hidden="true" style="background-color: #385185;color:white; padding:0.14rem 0.14rem 0rem 0.3rem; font-size:small;"></i>
+                <a href="" class='btn p-0 text-light mb-3' style="background-color: #fff;"><i class="fa fa-facebook" aria-hidden="true" style="background-color: #385185;color:white; padding:0.14rem 0.14rem 0rem 0.3rem; font-size:small;"></i>
                     <b style="color:#385185;font-size: 0.9rem;">Login with Facebook</b></a>
 
-                <small><a href="{% url 'password_reset' %}">Forgot Password?</a></small>
+                <small><a href="">Forgot Password?</a></small>
 
             </div>
             <div class='card text-center mt-3 p-4'>
-                <small>Don't have an account? <a href="{% url 'signup'%}" style="color: #0095f6 !important">Sign Up</a></small>
+                <small>Don't have an account? <a href="{% url 'app_insta:signup'%}" style="color: #0095f6 !important">Sign Up</a></small>
             </div>
         </div>
     </div>
