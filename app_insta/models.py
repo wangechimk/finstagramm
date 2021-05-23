@@ -14,7 +14,7 @@ class Image(models.Model):
     caption = models.TextField()
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, blank=True)
-    created_on = models.DateTimeField(default=datetime.date.today(), null=True, blank=True)
+    created_on = models.DateTimeField(default=datetime.datetime.now(), null=True, blank=True)
 
     class Meta:
         ordering = ['?'] #order randomly on feed
@@ -102,7 +102,7 @@ class Profile(models.Model):
         self.save()
 
 class Follow(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')    
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following' )    
     reciever = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -122,24 +122,60 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
 
         Follow.objects.create(owner=instance, reciever=instance)
-        rashim_narayan = User.objects.get(username='wangechi_kimani')
-        Follow.objects.create(owner=instance, reciever=rashim_narayan)
+        wangechi_kimani = User.objects.get(username='wangechi_kimani')
+        Follow.objects.create(owner=instance, reciever=wangechi_kimani)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+class Post(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_posts')    
+    photo = models.ImageField(upload_to="posts", default='default.jpg')
+    caption = models.CharField(max_length=250,default='')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    comments = models.ManyToManyField(User, through='Comment', related_name='comment_post')
+    likes = models.ManyToManyField(User, through='Like', related_name='like_post')
+    saves = models.ManyToManyField(User, through='Save', related_name='save_post')
+
+    
+    def save(self, *args, **kwargs):
+        super().save()
+        img = Image.open(self.photo.path)
+        width, height = img.size  
+
+        if height < width:
+            left = (width - height) / 2
+            right = (width + height) / 2
+            top = 0
+            bottom = height
+            img = img.crop((left, top, right, bottom))
+
+        elif width < height:
+            left = 0
+            right = width
+            top = 0
+            bottom = width
+            img = img.crop((left, top, right, bottom))
+
+        img.save(self.photo.path)
+
+
+    def __str__(self):
+        return f'{self.owner.username}: {self.caption[:15]}...'
 
 
 class Comment(models.Model):
     ''' a model for comments'''
-    related_post = models.ForeignKey('Image', on_delete=models.CASCADE ,default=None)
-    name = models.ForeignKey('Profile', on_delete=models.CASCADE)
-    comment_body = models.TextField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)    
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
+    text = models.CharField(max_length=250, null=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['created_on']
+         ordering = ['-created_on']
     
     def save_comments(self):
         ''' method to save comment instance '''
@@ -156,7 +192,8 @@ class Comment(models.Model):
 
 
     def __str__(self):
-        return 'Comment by {self.name}'
+        return f'{self.owner.username}\'s comment on "{self.post.caption[:15]}..." post: {self.text}'
+
 
 
 
@@ -170,3 +207,89 @@ class Relation(models.Model):
 
     def __str__(self):
         return '{self.follower} follows {self.followed}' 
+
+class Like(models.Model) :
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('owner', 'post')
+
+    def __str__(self) :
+        return '%s likes %s... post'%(self.owner.username, self.post.caption[:15])
+
+class Inbox(models.Model) :
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_owner')
+    reciever = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_reciever')
+
+    class Meta:
+        unique_together = ('owner', 'reciever')
+
+    def __str__(self) :
+        return '%s -> %s' % (self.owner.username, self.reciever.username)
+
+class Message(models.Model):
+
+    text = models.CharField(max_length=250, blank=True, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
+
+    owner_inbox = models.ForeignKey(Inbox, on_delete=models.CASCADE, default=None, related_name='owner_messages')
+    reciever_inbox = models.ForeignKey(Inbox, on_delete=models.CASCADE, default=None, related_name='reciever_messages')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    sent = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self) :
+        if self.post:
+            if len(self.post.caption)>10:
+                return '%s -> %s : [Post] %s...' % (self.owner_inbox.owner.username, self.reciever_inbox.owner.username, self.post.caption[:10])
+            else:
+                return '%s -> %s : [Post] %s' % (self.owner_inbox.owner.username, self.reciever_inbox.owner.username, self.post.caption)
+
+        else:
+            if len(self.text)>10:
+                return '%s -> %s : [Message] %s...' % (self.owner_inbox.owner.username, self.reciever_inbox.owner.username, self.text[:10])
+            else:
+                return '%s -> %s : [Message] %s' % (self.owner_inbox.owner.username, self.reciever_inbox.owner.username, self.text)
+
+class Save(models.Model) :
+    owner = models.ForeignKey(User, related_name='save_owner', on_delete=models.CASCADE)    
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_saves')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('owner', 'post')
+
+    def __str__(self) :
+        return '%s saved %s... post'%(self.owner.username, self.post.caption[:15])
+
+
+class Reply(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)    
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_replies')
+    text = models.CharField(max_length=250, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        
+    def __str__(self):
+        return f'{self.owner.username}\'s reply to "{self.comment.text[:15]}..." comment: {self.text[:15]}...'
+
+class InboxNotification(models.Model):
+    inbox = models.OneToOneField(Inbox, on_delete=models.CASCADE)
+
+
+class LikeNotification(models.Model):
+    like = models.OneToOneField(Like, on_delete=models.CASCADE)
+
+class CommentNotification(models.Model):
+    comment = models.OneToOneField(Comment, on_delete=models.CASCADE)
+
+class FollowNotification(models.Model):
+    follow = models.OneToOneField(Follow, on_delete=models.CASCADE)
