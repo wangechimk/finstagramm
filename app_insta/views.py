@@ -179,7 +179,7 @@ class PostCreateView(OwnerCreateView):
     form_class = PostForm
 
     def get_success_url(self):
-        return reverse('post_list')
+        return reverse('app_insta:post_list')
 
 
 

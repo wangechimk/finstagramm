@@ -44,7 +44,6 @@
 
 
   {% if profile.user.username in following %}
-
   <div class='row col-12 justify-content-center' style="font-size: 0.85rem;">
     <a class="mr-5 ml-5 ml-md-0 text-dark border-top border-dark" href="{% url 'profile' profile.user.username %}" style="padding-top:1rem">       
       <svg aria-label="Posts" class="_8-yf5 " fill="#262626" height="12" viewBox="0 0 48 48" width="12"><path clip-rule="evenodd" d="M45 1.5H3c-.8 0-1.5.7-1.5 1.5v42c0 .8.7 1.5 1.5 1.5h42c.8 0 1.5-.7 1.5-1.5V3c0-.8-.7-1.5-1.5-1.5zm-40.5 3h11v11h-11v-11zm0 14h11v11h-11v-11zm11 25h-11v-11h11v11zm14 0h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11zm14 28h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11z" fill-rule="evenodd"></path></svg>
@@ -111,14 +110,15 @@
     {% else %}
   </div>
 
-  <!-- <div class='row col-12 col-md-9 justify-content-center bg-white'>
+  <div class='row col-12 col-md-9 justify-content-center bg-white'>
     <div class='m-5 text-center'>  
       <b>This Account is Private</b>
       <p>Follow to see their photos and videos.</p>
     </div>
-  </div> -->
+  </div>
   {% endif %}
 </div>
+  
   <footer class='col-12 mb-2 mt-5 justify-content-center' style="font-size: 0.75rem; color:#8e8e8e;">
     <p class='text-center'style='cursor:pointer;'> About  &emsp;Blog  &emsp;Jobs &emsp; Help &emsp; API  &emsp;Privacy &emsp; Terms &emsp; Top Accounts &emsp; Hashtags &emsp;Locations</p>
     <p class='text-center'style='cursor:pointer;'> English  © 2021 Instagram from Facebook</p>

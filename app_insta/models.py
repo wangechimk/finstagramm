@@ -48,36 +48,36 @@ class Profile(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+9999999999'. Up to 15 digits allowed.")
     phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
 
-    def save(self, *args, **kwargs):
-        super().save()
-        img = Image.open(self.photo.path)
-        width, height = img.size  # Get dimensions
+    # def save(self, *args, **kwargs):
+    #     super().save()
+    #     img = Image.open(self.photo.path)
+    #     width, height = img.size  # Get dimensions
 
-        if width > 300 and height > 300:
-            # keep ratio but shrink down
-            img.thumbnail((width, height))
+    #     if width > 300 and height > 300:
+    #         # keep ratio but shrink down
+    #         img.thumbnail((width, height))
 
-        # check which one is smaller
-        if height < width:
-            # make square by cutting off equal amounts left and right
-            left = (width - height) / 2
-            right = (width + height) / 2
-            top = 0
-            bottom = height
-            img = img.crop((left, top, right, bottom))
+    #     # check which one is smaller
+    #     if height < width:
+    #         # make square by cutting off equal amounts left and right
+    #         left = (width - height) / 2
+    #         right = (width + height) / 2
+    #         top = 0
+    #         bottom = height
+    #         img = img.crop((left, top, right, bottom))
 
-        elif width < height:
-            # make square by cutting off bottom
-            left = 0
-            right = width
-            top = 0
-            bottom = width
-            img = img.crop((left, top, right, bottom))
+    #     elif width < height:
+    #         # make square by cutting off bottom
+    #         left = 0
+    #         right = width
+    #         top = 0
+    #         bottom = width
+    #         img = img.crop((left, top, right, bottom))
 
-        if width > 300 and height > 300:
-            img.thumbnail((300, 300))
+    #     if width > 300 and height > 300:
+    #         img.thumbnail((300, 300))
 
-        img.save(self.photo.path)
+    #     img.save(self.photo.path)
 
     def __str__(self):
         return f'{self.user.username}'
@@ -121,13 +121,13 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
-        Follow.objects.create(owner=instance, reciever=instance)
-        wangechi_kimani = User.objects.get(username='wangechi_kimani')
-        Follow.objects.create(owner=instance, reciever=wangechi_kimani)
+        # Follow.objects.create(owner=instance, reciever=instance)
+        # wangechi_kimani = User.objects.get(username='wangechi_kimani')
+        # Follow.objects.create(owner=instance, reciever=wangechi_kimani)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()
 
 class Post(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_posts')    
@@ -143,24 +143,24 @@ class Post(models.Model):
     
     def save(self, *args, **kwargs):
         super().save()
-        img = Image.open(self.photo.path)
-        width, height = img.size  
+        # img = Image.open(self.photo.path)
+        # width, height = img.size  
 
-        if height < width:
-            left = (width - height) / 2
-            right = (width + height) / 2
-            top = 0
-            bottom = height
-            img = img.crop((left, top, right, bottom))
+        # if height < width:
+        #     left = (width - height) / 2
+        #     right = (width + height) / 2
+        #     top = 0
+        #     bottom = height
+        #     img = img.crop((left, top, right, bottom))
 
-        elif width < height:
-            left = 0
-            right = width
-            top = 0
-            bottom = width
-            img = img.crop((left, top, right, bottom))
+        # elif width < height:
+        #     left = 0
+        #     right = width
+        #     top = 0
+        #     bottom = width
+        #     img = img.crop((left, top, right, bottom))
 
-        img.save(self.photo.path)
+        # img.save(self.photo.path)
 
 
     def __str__(self):
