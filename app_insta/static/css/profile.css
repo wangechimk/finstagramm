@@ -1,3 +1,7 @@
+.image{
+    background-size: cover !important;
+  background-position: center;
+}
 .post-overlay{
     position: absolute;
     top: 4%;
