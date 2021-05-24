@@ -20,6 +20,9 @@ urlpatterns=[
     path('notification/display/', views.NotificationDisplayView.as_view(), name='notification_display'),
     # path('<str:username>/', views.profile, name='profile'),
     path('like/',views.Like, name='post_like'),
+    path('comment/',views.CommentCreateView, name='post_comment_create'),
+    path('like/',views.LikeView, name='post_like'),
+    path('unlike/',views.UnlikeView, name='post_unlike'),
     
 
     

@@ -1,20 +1,20 @@
 from django.contrib.auth.forms import UsernameField
 from django.shortcuts import render,redirect,HttpResponseRedirect, get_object_or_404
-from .models import Image, Profile,Follow, Comment,Like, Relation
+from .models import Image, Profile,Follow, Comment,Like,Post,Inbox, Relation
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import authenticate
-from .forms import uploadForm ,SignUpForm
+from .forms import uploadForm ,SignUpForm,PostForm, CommentForm
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.utils import IntegrityError
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
-from .models import Profile,Post,Inbox,Follow
 from .models import LikeNotification, CommentNotification, FollowNotification,InboxNotification
 from itertools import chain
-from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 from django.urls import reverse, reverse_lazy
 from .owner import  OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
@@ -233,4 +233,55 @@ class InboxNotificationView(View):
 
         return JsonResponse(response)
         
+@method_decorator(csrf_exempt, name='dispatch')
+@login_required
+def SinglePostView(request, pk):
+    if request.is_ajax():
+        post = get_object_or_404(Post, id=pk)
+        like_rows = request.user.like_post.values('id')
+        liked_posts = [ row['id'] for row in like_rows ]
+        save_rows = request.user.save_post.values('id')
+        saved_posts = [ row['id'] for row in save_rows ]
+        comment_form = CommentForm()
+        html = render_to_string('single_post.html', {'user':request.user, 'post': post, 'comment_form':comment_form, 'liked_posts':liked_posts, 'saved_posts':saved_posts})
+        return JsonResponse(data={'html':html})
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LikeView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        print("Add like PK:",pk)
+        post = get_object_or_404(Post, id=pk)
+        like = Like(owner=request.user, post=post)
         
+        try:
+            like.save()  
+            if like.owner != post.owner:
+                notification = LikeNotification.objects.create(like=like)
+        except IntegrityError:
+            pass
+    
+
+        html = render_to_string('like_count.html', {'post': post})
+        return JsonResponse(data={'html':html})
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UnlikeView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        print("Delete like PK:",pk)
+        post = get_object_or_404(Post, id=pk)
+
+        try:
+            like = Like.objects.get(owner=request.user, post=post).delete()
+            notification = LikeNotification.objects.get(like=like).delete()
+        except (Like.DoesNotExist, LikeNotification.DoesNotExist) as e:
+            pass
+
+        html = render_to_string('like_count.html', {'post': post})
+        return JsonResponse(data={'html':html})
+
+
