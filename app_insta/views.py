@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
-from .models import Profile,Post,Inbox
+from .models import Profile,Post,Inbox,Follow
 from .models import LikeNotification, CommentNotification, FollowNotification,InboxNotification
 from itertools import chain
 from .forms import PostForm, CommentForm
