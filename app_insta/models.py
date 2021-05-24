@@ -10,7 +10,7 @@ import PIL.Image as Image
 # Create your models here.
 class Image(models.Model):
     ''' a model for Image posts '''
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='img/')
     caption = models.TextField()
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, blank=True)
@@ -42,7 +42,7 @@ class Image(models.Model):
 class Profile(models.Model):
     ''' extended User model'''
     user = models.OneToOneField(User,related_name='user',on_delete=models.CASCADE,default=1)
-    photo = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    photo = models.ImageField(default='default.jpg', upload_to='img')
     website = models.URLField(default='', blank=True)
     bio = models.TextField(max_length=500, blank=True, default='')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+9999999999'. Up to 15 digits allowed.")
