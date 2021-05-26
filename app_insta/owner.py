@@ -21,7 +21,6 @@ class OwnerCreateView(LoginRequiredMixin, CreateView):
     """
 
     def form_valid(self, form):
-        print('form_valid called')
         object = form.save(commit=False)
         object.owner = self.request.user
         object.save()

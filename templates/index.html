@@ -1,4 +1,5 @@
-{% load static %}{% load bootstrap5 %} 
+{% load static %}
+{% load bootstrap5 %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,39 +22,6 @@
                 <div class="col-9">
                     <div class="row">
                         <div class="col-8">
-    
-                            <!-- START OF STORIES -->
-                            <div class="card">
-                                <div class="card-body d-flex justify-content-start">
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="list-inline-item">
-                                            <button class="btn p-0 m-0">
-                                                <div class="d-flex flex-column align-items-center">
-                                                    <div
-                                                        class="rounded-circle overflow-hidden d-flex justify-content-center align-items-center border border-danger story-profile-photo">
-                                                        <img src="{{item.profile.photo.url}}" alt="..."
-                                                            style="transform: scale(1.5); width: 100%; position: absolute; left: 0;">
-                                                    </div>
-                                                    <small>Shmurda</small>
-                                                </div>
-                                            </button>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <button class="btn p-0 m-0">
-                                                <div class="d-flex flex-column align-items-center">
-                                                    <div
-                                                        class="rounded-circle overflow-hidden d-flex justify-content-center align-items-center border border-danger story-profile-photo">
-                                                        <img src="{{item.profile.photo.url}}" alt="..."
-                                                            style="transform: scale(1.5); width: 100%; position: absolute; left: 0;">
-                                                    </div>
-                                                    <small>Ariri</small>
-                                                </div>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!-- END OF STORIES -->
       
         <!-- START OF POSTS -->
         <div class="d-flex flex-column mt-4 mb-4">
